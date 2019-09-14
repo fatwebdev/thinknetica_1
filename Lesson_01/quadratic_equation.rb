@@ -15,7 +15,8 @@ elsif d.zero?
   x = (-b) / (2 * a)
   puts "The quadratic equation has only one root: x = #{x}"
 else
-  x1 = (-b + Math.sqrt(d)) / (2 * a)
-  x2 = (-b - Math.sqrt(d)) / (2 * a)
+  d_root = Math.sqrt(d)
+  x1 = (-b + d_root) / (2 * a)
+  x2 = (-b - d_root) / (2 * a)
   puts "The quadratic equation has two roots: x1 = #{x1}, x2 = #{x2}"
 end
