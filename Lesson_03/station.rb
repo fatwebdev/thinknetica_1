@@ -16,7 +16,11 @@ class Station
   end
 
   def send_train(train)
-    train.forward if trains[train.type].delete(train)
+    train.forward
+  end
+
+  def delete_train(train)
+    trains[train.type].delete(train)
   end
 
   def show_trains

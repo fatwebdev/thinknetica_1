@@ -28,7 +28,8 @@ class Train
   end
 
   def arrive_at_station(station)
-    if !@current_station || station == prev_station || station == next_station
+    if !current_station || station == prev_station || station == next_station
+      current_station.delete_train(self) if current_station
       station.take_train(self)
       @current_station = station
     end
