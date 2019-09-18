@@ -15,21 +15,23 @@ class Train
   end
 
   def add_wagon
-    self.wagon_count += 1 if speed.zero?
+    @wagon_count += 1 if speed.zero?
   end
 
   def remove_wagon
-    self.wagon_count -= 1 if speed.zero?
+    @wagon_count -= 1 if speed.zero? && wagon_count > 0
   end
 
   def define_route(route)
     @route = route
-    arrive_at_station(route.path.first)
+    station = route.path.first
+    station.take_train(self)
+    @current_station = station
   end
 
   def arrive_at_station(station)
-    if !current_station || station == prev_station || station == next_station
-      current_station.delete_train(self) if current_station
+    if [prev_station, next_station].include?(station)
+      current_station.delete_train(self)
       station.take_train(self)
       @current_station = station
     end
@@ -44,10 +46,12 @@ class Train
   end
 
   def prev_station
-    @route.prev_station(@current_station)
+    idx_current_station = @route.path.index(@current_station)
+    @route.path[idx_current_station - 1] if idx_current_station > 0
   end
 
   def next_station
-    @route.next_station(@current_station)
+    idx_current_station = @route.path.index(@current_station)
+    @route.path[idx_current_station + 1] if idx_current_station < @route.path.length - 1
   end
 end

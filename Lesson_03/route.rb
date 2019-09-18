@@ -22,16 +22,4 @@ class Route
       end
     end
   end
-
-  def prev_station(station)
-    idx = path.index(station)
-
-    path[idx - 1] if idx > 0
-  end
-
-  def next_station(station)
-    idx = path.index(station)
-
-    path[idx + 1] if idx + 1 < path.length
-  end
 end
