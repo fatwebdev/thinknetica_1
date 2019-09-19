@@ -53,6 +53,8 @@ class Train
 
   # for public, train can move only on next station or prev station
   def arrive_at_station(station)
+    return if station.nil?
+
     current_station.delete_train(self)
     station.take_train(self)
     @current_station = station
