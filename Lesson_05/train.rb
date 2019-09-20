@@ -2,12 +2,27 @@ class Train
   attr_accessor :speed
   attr_reader :wagon_count, :current_station, :number, :type
 
+  include Manufacturer
+  include InstanceCounter
+
+  @trains = []
+
+  class << self
+    def find(number)
+      @trains.select { |train| train.number == number }.first
+    end
+
+    attr_accessor :trains
+  end
+
   def initialize(number)
     @number = number
     @type = type
     @wagons = []
 
     @speed = 0
+
+    self.class.trains << self
   end
 
   def stop

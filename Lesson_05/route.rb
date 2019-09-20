@@ -1,6 +1,8 @@
 class Route
   attr_reader :path
 
+  include InstanceCounter
+
   def initialize(from_station, to_station)
     @path = [from_station, to_station]
   end
