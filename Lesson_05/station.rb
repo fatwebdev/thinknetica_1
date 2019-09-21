@@ -3,10 +3,10 @@ class Station
 
   include InstanceCounter
 
-  @stations = []
+  @@stations = []
 
   def self.all
-    @stations
+    @@stations
   end
 
   def initialize(name)
@@ -14,7 +14,7 @@ class Station
 
     @trains = {}
 
-    self.class.all << self
+    @@stations << self
   end
 
   def take_train(train)

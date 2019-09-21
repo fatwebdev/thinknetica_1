@@ -2,19 +2,20 @@ module InstanceCounter
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
-    base.instance_variable_set :@instances_count, 0
+    base.instance_variable_set :@instances, 0
   end
 
   module ClassMethods
     def instances
-      @instances_count
+      @instances
     end
+
+    attr_accessor :instances
   end
 
   module InstanceMethods
     def register_instance
-      current = self.class.instance_variable_get(:@instances_count)
-      self.class.instance_variable_set(:@instances_count, current.succ)
+      self.class.instances += 1
     end
   end
 end

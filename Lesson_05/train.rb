@@ -5,14 +5,10 @@ class Train
   include Manufacturer
   include InstanceCounter
 
-  @trains = []
+  @@trains = {}
 
-  class << self
-    def find(number)
-      @trains.select { |train| train.number == number }.first
-    end
-
-    attr_accessor :trains
+  def self.find(number)
+    @@trains[number]
   end
 
   def initialize(number)
@@ -22,7 +18,7 @@ class Train
 
     @speed = 0
 
-    self.class.trains << self
+    @@trains[number] = self
   end
 
   def stop
