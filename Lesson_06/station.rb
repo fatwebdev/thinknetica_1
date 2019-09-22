@@ -14,7 +14,16 @@ class Station
 
     @trains = {}
 
+    validate!
+
     @@stations << self
+  end
+
+  def valid?
+    validate!
+    true
+  rescue RuntimeError
+    false
   end
 
   def take_train(train)
@@ -44,5 +53,13 @@ class Station
       puts "\t#{type}:"
       trains_this_type.each { |train| puts "\t\t#{train.number}" }
     end
+  end
+
+  private
+
+  def validate!
+    raise 'Station name can\'t be empty' if name.empty?
+    raise 'Station name length must be less or equal 15 symbols' if name.length > 15
+    raise 'Station with that name already created' if @@stations.select { |station| station != self && station.name == name }.any?
   end
 end

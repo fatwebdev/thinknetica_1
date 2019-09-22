@@ -5,6 +5,8 @@ class Train
   include Manufacturer
   include InstanceCounter
 
+  NUMBER_FORMAT = /^[\d\wа-я]{3}-?[\d\wа-я]{2}$/i
+
   @@trains = {}
 
   def self.find(number)
@@ -18,7 +20,16 @@ class Train
 
     @speed = 0
 
+    validate!
+
     @@trains[number] = self
+  end
+
+  def valid?
+    validate!
+    true
+  rescue RuntimeError
+    false
   end
 
   def stop
@@ -69,5 +80,10 @@ class Train
     current_station.delete_train(self)
     station.take_train(self)
     @current_station = station
+  end
+
+  def validate!
+    raise 'Incorrect number format, XXXXX or XXX-XX where X is digit or letter' if number !~ NUMBER_FORMAT
+    raise 'Train with that number already created' if @@trains[number] && @@trains[number] != self
   end
 end

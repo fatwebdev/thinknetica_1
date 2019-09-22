@@ -42,7 +42,11 @@ class Railway
     print 'Enter station name... '
     name = gets.chomp
 
-    @stations << Station.new(name)
+    station = Station.new(name)
+    @stations << station
+  rescue RuntimeError => e
+    print_error(e.message)
+    retry
   end
 
   def train_types_menu_options
@@ -60,10 +64,15 @@ class Railway
                     when 2 then CargoTrain
                     end
 
-    print 'Enter train number... '
-    number = gets.chomp
-
-    @trains << choiced_train.new(number)
+    begin
+      print 'Enter train number... '
+      number = gets.chomp
+      train = choiced_train.new(number)
+      @trains << train
+    rescue RuntimeError => e
+      print_error(e.message)
+      retry
+    end
   end
 
   def choiced_entity(title, entity_collection, name_attribute)
@@ -89,8 +98,11 @@ class Railway
   def create_route
     start_station = choiced_station('start station')
     end_station = choiced_station('end station')
-    @routes << Route.new(start_station, end_station)
-    puts @routes
+    route = Route.new(start_station, end_station)
+    @routes << route
+  rescue RuntimeError => e
+    print_error(e.message)
+    retry
   end
 
   def edit_route_menu_options

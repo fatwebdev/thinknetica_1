@@ -5,6 +5,15 @@ class Route
 
   def initialize(from_station, to_station)
     @path = [from_station, to_station]
+
+    validate!
+  end
+
+  def valid?
+    validate!
+    true
+  rescue RuntimeError
+    false
   end
 
   def add_station(station)
@@ -23,5 +32,11 @@ class Route
 
   def show
     print to_s
+  end
+
+  private
+
+  def validate!
+    raise 'Route must have start station and end station' unless path.all? { |i| i.is_a?(Station) }
   end
 end
