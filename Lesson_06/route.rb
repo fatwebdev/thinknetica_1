@@ -30,10 +30,6 @@ class Route
       .join(' => ')
   end
 
-  def show
-    print to_s
-  end
-
   private
 
   def validate!
