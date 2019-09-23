@@ -203,14 +203,15 @@ class Railway
 
   def wagon_occupy(train)
     wagon = choiced_wagon(train.wagons)
-    if wagon.method(:occupy).arity.zero?
-      wagon.occupy
-      return
-    end
 
-    print 'Enter occupy capacity... '
-    capacity = gets.chomp.to_i
-    wagon.occupy(capacity)
+    case wagon
+    when PassengerWagon
+      wagon.occupy
+    when CargoWagon
+      print 'Enter occupy capacity... '
+      capacity = gets.chomp.to_i
+      wagon.occupy(capacity)
+    end
   end
 
   def train_add_wagon(train)
