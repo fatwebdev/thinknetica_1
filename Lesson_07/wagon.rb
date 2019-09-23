@@ -8,6 +8,15 @@ class Wagon
     @full_capacity = full_capacity
     @occupied = 0
     @number = rand(36**8).to_s(36).upcase
+
+    validate!
+  end
+
+  def valid?
+    validate!
+    true
+  rescue RuntimeError
+    false
   end
 
   def type
@@ -25,4 +34,10 @@ class Wagon
   protected
 
   attr_writer :occupied
+
+  private
+
+  def validate!
+    raise 'Wagon capacity must be positive' if full_capacity.negative?
+  end
 end

@@ -220,9 +220,15 @@ class Railway
             when 'cargo' then CargoTrain
             end
 
-    print 'Enter wagon capacity... '
-    capacity = gets.chomp.to_i
-    train.add_wagon(wagon.new(capacity))
+    begin
+      print 'Enter wagon capacity... '
+      capacity = gets.chomp.to_i
+      wagon = wagon.new(capacity)
+      train.add_wagon(wagon)
+    rescue RuntimeError => e
+      print_error(e.message)
+      retry
+    end
   end
 
   def show_wagons(train, options = {})
