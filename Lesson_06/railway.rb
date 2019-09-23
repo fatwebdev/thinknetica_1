@@ -157,11 +157,24 @@ class Railway
     train.add_wagon(wagon.new)
   end
 
+  def show_trains(station)
+    if station.trains.empty?
+      puts 'There are no trains at the station.'
+      return
+    end
+
+    puts 'There are trains at the station by type:'
+    station.trains.each do |type, trains_this_type|
+      puts "\t#{type}:"
+      trains_this_type.each { |train| puts "\t\t#{train.number}" }
+    end
+  end
+
   def show_stations
     print_title('show stations')
     @stations.each do |station|
       print station.name + '. '
-      station.show_trains
+      show_trains(station)
     end
   end
 
