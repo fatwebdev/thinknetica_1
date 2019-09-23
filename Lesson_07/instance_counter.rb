@@ -7,10 +7,10 @@ module InstanceCounter
 
   module ClassMethods
     def instances
-      @instances
+      @instances.to_i
     end
 
-    attr_accessor :instances
+    attr_writer :instances
   end
 
   module InstanceMethods

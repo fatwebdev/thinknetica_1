@@ -1,6 +1,6 @@
 class Train
   attr_accessor :speed
-  attr_reader :wagon_count, :current_station, :number, :type
+  attr_reader :wagons, :current_station, :number, :type
 
   include Manufacturer
   include InstanceCounter
@@ -38,6 +38,10 @@ class Train
 
   def add_wagon(wagon)
     @wagons << wagon if speed.zero?
+  end
+
+  def each_wagon
+    @wagons.each { |wagon| yield(wagon) } unless @wagons.empty?
   end
 
   def remove_wagon

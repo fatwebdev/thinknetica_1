@@ -23,6 +23,36 @@ class Railway
     end
   end
 
+  def seed
+    minsk = Station.new('Minsk')
+    moscow = Station.new('Moscow')
+    berlin = Station.new('Berlin')
+
+    @stations = [minsk, moscow, berlin]
+
+    moscow_to_berlin = Route.new(moscow, berlin)
+    minsk_to_berlin = Route.new(minsk, berlin)
+
+    @routes = [moscow_to_berlin, minsk_to_berlin]
+
+    passenger_wagon = PassengerWagon.new(40)
+    passenger_wagon.occupy
+    passenger_wagon.occupy
+
+    cargo_wagon = CargoWagon.new(100)
+
+    passenger_train = PassengerTrain.new('too-to')
+    passenger_train.define_route(moscow_to_berlin)
+    passenger_train.add_wagon(passenger_wagon)
+    passenger_train.add_wagon(PassengerWagon.new(40))
+
+    cargo_train = CargoTrain.new('12334')
+    cargo_train.define_route(minsk_to_berlin)
+    cargo_train.add_wagon(cargo_wagon)
+
+    @trains = [passenger_train, cargo_train]
+  end
+
   private
 
   def main_menu_options
@@ -95,6 +125,10 @@ class Railway
     choiced_entity("choice #{title}", @stations, :name)
   end
 
+  def choiced_wagon(wagons)
+    choiced_entity("choice wagon", wagons, :number)
+  end
+
   def create_route
     start_station = choiced_station('start station')
     end_station = choiced_station('end station')
@@ -124,10 +158,9 @@ class Railway
   def train_actions_menu_options
     [
       '1 - set route',
-      '2 - add wagon',
-      '3 - remove wagon',
-      '4 - move forward',
-      '5 - move backward'
+      '2 - train wagons actions',
+      '3 - move forward',
+      '4 - move backward'
     ]
   end
 
@@ -142,11 +175,42 @@ class Railway
 
     case option_choice
     when 1 then train.define_route(choiced_route)
-    when 2 then train_add_wagon(train)
-    when 3 then train.remove_wagon
-    when 4 then train.forward
-    when 5 then train.backward
+    when 2 then train_wagons_actions(train)
+    when 3 then train.forward
+    when 4 then train.backward
     end
+  end
+
+  def train_wagons_actions_menu_options
+    [
+      '1 - add wagon',
+      '2 - remove wagon',
+      '3 - occupy in wagon',
+      '4 - show wagons'
+    ]
+  end
+
+  def train_wagons_actions(train)
+    render_options('train wagons actions', train_wagons_actions_menu_options)
+
+    case option_choice
+    when 1 then train_add_wagon(train)
+    when 2 then train.remove_wagon
+    when 3 then wagon_occupy(train)
+    when 4 then show_wagons(train, title: true)
+    end
+  end
+
+  def wagon_occupy(train)
+    wagon = choiced_wagon(train.wagons)
+    if wagon.method(:occupy).arity.zero?
+      wagon.occupy
+      return
+    end
+
+    print 'Enter occupy capacity... '
+    capacity = gets.chomp.to_i
+    wagon.occupy(capacity)
   end
 
   def train_add_wagon(train)
@@ -154,26 +218,42 @@ class Railway
             when 'passenger' then PassengerWagon
             when 'cargo' then CargoTrain
             end
-    train.add_wagon(wagon.new)
+
+    print 'Enter wagon capacity... '
+    capacity = gets.chomp.to_i
+    train.add_wagon(wagon.new(capacity))
+  end
+
+  def show_wagons(train, options = {})
+    padding = "\t" * options[:offset] ||= 0
+    print_title('train wagons') if options[:title]
+
+    if train.wagons.length.zero?
+      puts "#{padding}There are no wagons in the train."
+      return
+    end
+
+    train.each_wagon do |wagon|
+      puts "#{padding}#: %-8s  type: %10s  occupied: %d out of %d" % [wagon.number, wagon.type, wagon.occupied, wagon.full_capacity]
+    end
   end
 
   def show_trains(station)
     if station.trains.empty?
-      puts 'There are no trains at the station.'
+      puts "\tThere are no trains at the station."
       return
     end
 
-    puts 'There are trains at the station by type:'
-    station.trains.each do |type, trains_this_type|
-      puts "\t#{type}:"
-      trains_this_type.each { |train| puts "\t\t#{train.number}" }
+    station.each_train do |train|
+      puts "\t#: %-8s type: %-10s wagons count: %d" % [train.number, train.type, train.wagons.length]
+      show_wagons(train, offset: 2)
     end
   end
 
   def show_stations
     print_title('show stations')
     @stations.each do |station|
-      print station.name + '. '
+      puts station.name
       show_trains(station)
     end
   end

@@ -12,7 +12,7 @@ class Station
   def initialize(name)
     @name = name
 
-    @trains = {}
+    @trains = []
 
     validate!
 
@@ -27,11 +27,7 @@ class Station
   end
 
   def take_train(train)
-    if trains[train.type]
-      trains[train.type] << train
-    else
-      trains[train.type] = [train]
-    end
+    trains << train
   end
 
   def send_train(train)
@@ -39,7 +35,11 @@ class Station
   end
 
   def delete_train(train)
-    trains[train.type].delete(train)
+    trains.delete(train)
+  end
+
+  def each_train
+    trains.each { |train| yield(train) } unless @trains.empty?
   end
 
   private

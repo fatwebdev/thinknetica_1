@@ -16,4 +16,5 @@ require_relative './passenger_train.rb'
 require_relative './railway.rb'
 
 railway = Railway.new
+railway.seed
 railway.menu
