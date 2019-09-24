@@ -217,7 +217,7 @@ class Railway
   def train_add_wagon(train)
     wagon = case train.type
             when 'passenger' then PassengerWagon
-            when 'cargo' then CargoTrain
+            when 'cargo' then CargoWagon
             end
 
     begin
