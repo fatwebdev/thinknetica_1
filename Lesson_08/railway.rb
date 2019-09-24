@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Railway
   def initialize
     @stations = []
@@ -126,7 +128,7 @@ class Railway
   end
 
   def choiced_wagon(wagons)
-    choiced_entity("choice wagon", wagons, :number)
+    choiced_entity('choice wagon', wagons, :number)
   end
 
   def create_route
@@ -240,9 +242,12 @@ class Railway
       return
     end
 
-    train.each_wagon do |wagon|
-      puts "#{padding}#: %-8s  type: %10s  occupied: %d out of %d" % [wagon.number, wagon.type, wagon.occupied, wagon.full_capacity]
-    end
+    train.each_wagon { |wagon| print_wagon_info(wagon, padding) }
+  end
+
+  def print_wagon_info(wagon, padding)
+    template = "#{padding}#: %-8s  type: %10s  occupied: %d out of %d"
+    puts format(template, wagon.number, wagon.type, wagon.occupied, wagon.full_capacity)
   end
 
   def show_trains(station)
@@ -252,9 +257,14 @@ class Railway
     end
 
     station.each_train do |train|
-      puts "\t#: %-8s type: %-10s wagons count: %d" % [train.number, train.type, train.wagons.length]
+      print_train_info(train)
       show_wagons(train, offset: 2)
     end
+  end
+
+  def print_train_info(train)
+    template = "\t#: %-8s type: %-10s wagons count: %d"
+    puts format(template, train.number, train.type, train.wagons.length)
   end
 
   def show_stations

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Station
   attr_reader :trains, :name
 
@@ -47,6 +49,8 @@ class Station
   def validate!
     raise 'Station name can\'t be empty' if name.empty?
     raise 'Station name length must be less or equal 15 symbols' if name.length > 15
-    raise 'Station with that name already created' if @@stations.any? { |station| station != self && station.name == name }
+    raise 'Station with that name already created' if @@stations.any? do |station|
+      station != self && station.name == name
+    end
   end
 end

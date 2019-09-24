@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Train
   attr_accessor :speed
   attr_reader :wagons, :current_station, :number, :type
@@ -5,7 +7,7 @@ class Train
   include Manufacturer
   include InstanceCounter
 
-  NUMBER_FORMAT = /^[\d\wа-я]{3}-?[\d\wа-я]{2}$/i
+  NUMBER_FORMAT = /^[\d\wа-я]{3}-?[\d\wа-я]{2}$/i.freeze
 
   @@trains = {}
 
@@ -67,7 +69,7 @@ class Train
 
   def prev_station
     idx_current_station = @route.path.index(@current_station)
-    @route.path[idx_current_station - 1] if idx_current_station > 0
+    @route.path[idx_current_station - 1] if idx_current_station.positive?
   end
 
   def next_station
@@ -87,7 +89,8 @@ class Train
   end
 
   def validate!
-    raise 'Incorrect number format, XXXXX or XXX-XX where X is digit or letter' if number !~ NUMBER_FORMAT
+    incorrect_format = number !~ NUMBER_FORMAT
+    raise 'Incorrect number format, XXXXX or XXX-XX where X is digit or letter' if incorrect_format
     raise 'Train with that number already created' if @@trains[number] && @@trains[number] != self
   end
 end
