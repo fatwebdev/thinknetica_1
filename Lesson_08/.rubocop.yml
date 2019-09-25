@@ -1,2 +1,26 @@
 Metrics/LineLength:
   Max: 100
+
+Style/Documentation:
+  Enabled: false
+
+Style/ClassVars:
+  Exclude:
+    - './station.rb'
+    - './train.rb'
+
+Metrics/ClassLength:
+  Exclude:
+    - './railway.rb'
+
+Metrics/MethodLength:
+  Exclude:
+    - './railway.rb'
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - './railway.rb'
+
+Metrics/AbcSize:
+  Exclude:
+    - './railway.rb'
