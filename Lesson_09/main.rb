@@ -2,6 +2,8 @@
 
 require_relative './instance_counter.rb'
 require_relative './manufacturer.rb'
+require_relative './accessors.rb'
+require_relative './validation.rb'
 
 require_relative './route.rb'
 

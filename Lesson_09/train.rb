@@ -1,15 +1,22 @@
 # frozen_string_literal: true
 
 class Train
-  attr_accessor :speed
-  attr_reader :wagons, :current_station, :number, :type
-
-  include Manufacturer
+  include Accessors
   include InstanceCounter
+  include Manufacturer
+  include Validation
 
   NUMBER_FORMAT = /^[\d\wа-я]{3}-?[\d\wа-я]{2}$/i.freeze
 
   @@trains = {}
+
+  attr_reader :wagons, :current_station, :number, :type
+
+  strong_attr_accessor :speed, Numeric
+
+  validate :number, :presence
+  validate :number, :type, String
+  validate :number, :format, NUMBER_FORMAT
 
   def self.find(number)
     @@trains[number]
@@ -25,13 +32,6 @@ class Train
     validate!
 
     @@trains[number] = self
-  end
-
-  def valid?
-    validate!
-    true
-  rescue RuntimeError
-    false
   end
 
   def stop
@@ -86,11 +86,5 @@ class Train
     current_station.delete_train(self)
     station.take_train(self)
     @current_station = station
-  end
-
-  def validate!
-    incorrect_format = number !~ NUMBER_FORMAT
-    raise 'Incorrect number format, XXXXX or XXX-XX where X is digit or letter' if incorrect_format
-    raise 'Train with that number already created' if @@trains[number] && @@trains[number] != self
   end
 end

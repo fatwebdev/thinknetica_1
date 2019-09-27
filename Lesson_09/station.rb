@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 class Station
-  attr_reader :trains, :name
-
   include InstanceCounter
+  include Validation
 
   @@stations = []
+
+  attr_reader :trains, :name
+  validate :name, :presence
 
   def self.all
     @@stations
@@ -19,13 +21,6 @@ class Station
     validate!
 
     @@stations << self
-  end
-
-  def valid?
-    validate!
-    true
-  rescue RuntimeError
-    false
   end
 
   def take_train(train)
@@ -42,15 +37,5 @@ class Station
 
   def each_train
     trains.each { |train| yield(train) } unless @trains.empty?
-  end
-
-  private
-
-  def validate!
-    raise 'Station name can\'t be empty' if name.empty?
-    raise 'Station name length must be less or equal 15 symbols' if name.length > 15
-    raise 'Station with that name already created' if @@stations.any? do |station|
-      station != self && station.name == name
-    end
   end
 end
