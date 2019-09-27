@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Accessors
-  def self.insluded(base)
+  def self.included(base)
     base.extend ClassMethods
   end
 
