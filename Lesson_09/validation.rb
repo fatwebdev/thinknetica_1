@@ -22,7 +22,7 @@ module Validation
           value = instance_variable_get("@#{name}".to_sym)
           validator, *args = params
 
-          send validator, name, value, args
+          send "validate_#{validator}".to_sym, name, value, args
         end
       end
     end
@@ -36,16 +36,16 @@ module Validation
 
     private
 
-    def presence(name, value, _args)
+    def validate_presence(name, value, _args)
       raise "#{name} can't be empty" if value.nil? || ((value.is_a? String) && value.empty?)
     end
 
-    def format(name, value, args)
+    def validate_format(name, value, args)
       format = args[0]
       raise "#{name} must be format /#{format.source}/" unless value =~ format
     end
 
-    def type(name, value, args)
+    def validate_type(name, value, args)
       type = args[0]
       raise "#{name} must be type #{type}" unless value.is_a? type
     end
